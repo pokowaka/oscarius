@@ -80,3 +80,17 @@ def test_get_waveform_endpoint(client: TestClient):
     assert data["channel_code"] == "FlowRate"
     assert len(data["timestamps_ms"]) == 50
     assert len(data["values"]) == 50
+
+
+def test_static_files_mounted(tmp_path):
+    from unittest.mock import patch
+    fake_dist = tmp_path / "dist"
+    fake_dist.mkdir()
+    (fake_dist / "index.html").write_text("<!DOCTYPE html><html><body>Oscarius Web</body></html>")
+
+    with patch("oscarius.api.app.FRONTEND_DIST", fake_dist):
+        app = create_app()
+        with TestClient(app) as tc:
+            resp = tc.get("/")
+            assert resp.status_code == 200
+            assert "Oscarius Web" in resp.text
