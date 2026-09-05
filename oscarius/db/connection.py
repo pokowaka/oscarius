@@ -34,11 +34,11 @@ def open_database(db_path: Path | str, read_only: bool = True) -> sqlite3.Connec
             raise DatabaseNotFoundError(f"Database file not found at path: {path_obj}")
         if read_only:
             uri = f"file:{path_obj.resolve()}?mode=ro"
-            conn = sqlite3.connect(uri, uri=True)
+            conn = sqlite3.connect(uri, uri=True, check_same_thread=False)
         else:
-            conn = sqlite3.connect(path_obj)
+            conn = sqlite3.connect(path_obj, check_same_thread=False)
     else:
-        conn = sqlite3.connect(str(db_path))
+        conn = sqlite3.connect(str(db_path), check_same_thread=False)
 
     conn.row_factory = sqlite3.Row
     return conn

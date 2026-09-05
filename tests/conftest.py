@@ -128,7 +128,7 @@ def encode_qcompress(raw_bytes: bytes) -> bytes:
 @pytest.fixture
 def mock_db_conn() -> sqlite3.Connection:
     """Provides an in-memory SQLite database populated with schema v18 and test records."""
-    conn = sqlite3.connect(":memory:")
+    conn = sqlite3.connect(":memory:", check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.executescript(SCHEMA_V18_SQL)
 

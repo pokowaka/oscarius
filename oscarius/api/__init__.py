@@ -1,0 +1,1 @@
+"""Oscarius REST API package."""
