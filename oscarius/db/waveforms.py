@@ -55,6 +55,16 @@ class RespiratoryEvent:
     fullname: Optional[str] = None
 
 
+def encode_qcompress(raw_bytes: bytes) -> bytes:
+    """Encodes raw bytes as a Qt qCompress binary payload (4-byte length + zlib stream).
+
+    @param raw_bytes: Raw uncompressed byte stream.
+    @return: Qt qCompress byte buffer.
+    """
+    header = struct.pack(">I", len(raw_bytes))
+    return header + zlib.compress(raw_bytes, level=9)
+
+
 def qcompress_decode(payload: bytes) -> bytes:
     """Decodes a Qt qCompress binary payload.
 

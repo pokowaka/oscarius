@@ -34,6 +34,15 @@ def test_open_database_raises_if_file_not_found(tmp_path: Path):
         open_database(missing_file)
 
 
+def test_open_database_create_creates_new_database(tmp_path: Path):
+    new_db = tmp_path / "subdir" / "new.db"
+    conn = open_database(new_db, read_only=False, create=True)
+    assert new_db.is_file()
+    conn.execute("CREATE TABLE foo (id INT)")
+    conn.commit()
+    conn.close()
+
+
 def test_get_schema_version(mock_db_conn: sqlite3.Connection):
     version = get_schema_version(mock_db_conn)
     assert version == 18
